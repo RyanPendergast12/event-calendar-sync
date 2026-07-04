@@ -1,0 +1,34 @@
+# Copy to config.yml to customize. Everything here is optional and layers
+# on top of the defaults baked into the workflow env.
+ 
+# Markets to search (Ticketmaster / Bandsintown region filtering)
+markets:
+  - Las Vegas
+  - Los Angeles
+  - San Diego
+  - San Francisco
+ 
+# Artist watchlist (mirrors your concert-alert list)
+artists:
+  - Porter Robinson
+  - Snow Strippers
+  - Charli XCX
+  - underscores
+  - Jane Remover
+  - Mk.gee
+  - Justin Bieber
+  - ISOxo
+  - knock2
+  - Skrillex
+  - Kanye West
+ 
+# Public pages with valid schema.org JSON-LD Event metadata
+# (run clubs, track nights, fitness/community events, etc.)
+public_urls:
+  - https://example.com/events
+ 
+# Overrides for the env defaults (leave commented to use the workflow values)
+# target_calendar_name: "Concert + Social Alerts"
+# lookahead_days: 365
+# default_timezone: America/Los_Angeles
+ 
