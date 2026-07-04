@@ -1,0 +1,58 @@
+name: Event Calendar Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run without writing to iCloud"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+  schedule:
+    - cron: "23 */3 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: event-calendar-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ICLOUD_USERNAME: ${{ secrets.ICLOUD_USERNAME }}
+      ICLOUD_APP_PASSWORD: ${{ secrets.ICLOUD_APP_PASSWORD }}
+      ICLOUD_CALDAV_URL: ${{ secrets.ICLOUD_CALDAV_URL || 'https://caldav.icloud.com' }}
+      TARGET_CALENDAR_NAME: ${{ secrets.TARGET_CALENDAR_NAME || 'Concert + Social Alerts' }}
+      TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+      BANDSINTOWN_APP_ID: ${{ secrets.BANDSINTOWN_APP_ID }}
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'true' }}
+      LOOKAHEAD_DAYS: ${{ vars.LOOKAHEAD_DAYS || '365' }}
+      DEFAULT_TIMEZONE: ${{ vars.DEFAULT_TIMEZONE || 'America/Los_Angeles' }}
+      PYTHONPATH: src
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest
+
+      - name: Run event sync
+        run: python -m event_sync.main
