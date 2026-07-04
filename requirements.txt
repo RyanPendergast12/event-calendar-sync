@@ -1,0 +1,27 @@
+# event-calendar-sync runtime + CI deps
+# Inferred from imports in calendar_client.py / main.py and the README.
+ 
+# CalDAV write path (icalendar is a caldav dependency, pinned explicitly for the Alarm/vevent building)
+caldav>=1.3,<2.0
+icalendar>=5.0,<7.0
+ 
+# HTTP for Ticketmaster Discovery, Bandsintown, and the Discord webhook
+requests>=2.31,<3.0
+ 
+# config.yml parsing
+PyYAML>=6.0,<7.0
+ 
+# robust date parsing of API / JSON-LD date strings
+python-dateutil>=2.8
+ 
+# zoneinfo is stdlib on 3.11, but ship tzdata so it also works on Windows / minimal runners
+tzdata>=2024.1
+ 
+# JSON-LD (schema.org Event) extraction from public pages.
+# beautifulsoup4 if you're pulling <script type="application/ld+json"> yourself,
+# or swap for extruct if you want microdata/RDFa too.
+beautifulsoup4>=4.12
+ 
+# CI test runner (workflow calls `pytest`)
+pytest>=8.0
+ 
